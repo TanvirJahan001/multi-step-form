@@ -58,10 +58,8 @@ export default function MultiStepForm() {
   const mutation = useMutation({
     mutationFn: submitFormData,
     onSuccess: (data) => {
-      // Only show success message if Submit was clicked
       if (submitClicked) {
         setSubmissionSuccess(true);
-        // Log the successful submission data
         console.log('Form submitted successfully:', data);
       }
     },
@@ -130,8 +128,7 @@ export default function MultiStepForm() {
     try {
       setSubmitClicked(true);
 
-      // Log the form data to the console
-      console.log('Form data being submitted:', data);
+      // console.log('Form data being submitted:', data);
 
       // Submit the form data
       await mutation.mutateAsync(data);
