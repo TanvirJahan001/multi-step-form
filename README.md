@@ -1,15 +1,14 @@
 # Multi-Step Form with Dark Mode
 
-
 ## 📋 Overview
 
-A modern, responsive multi-step form application built with Next.js and Tailwind CSS. This application guides users through a sequential form submission process, breaking down complex forms into manageable steps with validation at each stage. It features a beautiful UI with a fully functional dark mode toggle.
+A modern, responsive multi-step form application built with Next.js 15 and Tailwind CSS 4. This application guides users through a sequential form submission process, breaking down complex forms into manageable steps with validation at each stage. It features a beautiful UI with a fully functional dark mode toggle that respects user preferences.
 
 ## ✨ Features
 
 ### Core Features
-- **🔄 Multi-step Navigation**: Intuitive step-by-step form progression with progress indicator
-- **✅ Form Validation**: Real-time validation using Zod schema validation
+- **🔄 Multi-step Navigation**: Intuitive step-by-step form progression with visual progress indicator
+- **✅ Form Validation**: Real-time validation using React Hook Form
 - **📱 Responsive Design**: Mobile-first approach with Tailwind CSS
 - **🌓 Dark Mode**: Toggle between light and dark themes with persistent user preference
 - **♿ Accessibility**: ARIA-compliant form controls and keyboard navigation
@@ -31,27 +30,13 @@ A modern, responsive multi-step form application built with Next.js and Tailwind
 
 ## 🛠️ Technologies Used
 
-- **Next.js**: React framework for server-rendered applications
-- **React**: UI library for building component-based interfaces
-- **React Hook Form**: Form state management and validation
-- **Zod**: TypeScript-first schema validation
-- **Tailwind CSS**: Utility-first CSS framework
-- **React Query**: Data fetching and state management library
+- **Next.js 15.2.5**: React framework for server-rendered applications
+- **React 19.0.0**: UI library for building component-based interfaces
+- **React Hook Form 7.55.0**: Form state management and validation
+- **Tailwind CSS 4**: Utility-first CSS framework
+- **React Query 5.72.1**: Data fetching and state management library
 - **Geist Font**: Modern, minimal typeface from Vercel
 
-## 📸 Screenshots
-
-<details>
-<summary>Click to expand screenshots</summary>
-
-### Light Mode
-![Light Mode - Personal Information](https://via.placeholder.com/800x500/f3f4f6/333333?text=Light+Mode+-+Personal+Information)
-![Light Mode - Summary](https://via.placeholder.com/800x500/f3f4f6/333333?text=Light+Mode+-+Summary)
-
-### Dark Mode
-![Dark Mode - Personal Information](https://via.placeholder.com/800x500/1e1e1e/ffffff?text=Dark+Mode+-+Personal+Information)
-![Dark Mode - Summary](https://via.placeholder.com/800x500/1e1e1e/ffffff?text=Dark+Mode+-+Summary)
-</details>
 
 ## 🚀 Getting Started
 
@@ -63,7 +48,7 @@ A modern, responsive multi-step form application built with Next.js and Tailwind
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/multi-step-form.git
+git clone https://github.com/TanvirJahan001/multi-step-form.git
 
 # Navigate to the project directory
 cd multi-step-form
@@ -86,18 +71,15 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ```
 ├── app/                    # Next.js app directory
 │   ├── components/         # React components
-│   │   ├── steps/          # Form step components
-│   │   │   ├── AccountSetup.jsx
-│   │   │   ├── AddressDetails.jsx
-│   │   │   ├── PersonalInfo.jsx
-│   │   │   └── Summary.jsx
+│   │   ├── Step1.js        # Personal information form
+│   │   ├── Step2.js        # Address details form
+│   │   ├── Step3.js        # Account setup form
+│   │   ├── Summary.js      # Form summary and submission
 │   │   ├── ThemeProvider.jsx  # Dark mode context provider
-│   │   ├── ThemeToggle.jsx    # Dark mode toggle button
-│   │   ├── FormSchema.js      # Zod validation schemas
-│   │   └── MultiStepForm.jsx  # Main form component
+│   │   └── ThemeToggle.jsx    # Dark mode toggle button
 │   ├── globals.css         # Global styles with dark mode variables
 │   ├── layout.js           # Root layout component
-│   ├── page.js             # Home page component
+│   ├── page.js             # Home page with multi-step form
 │   └── providers.js        # React Query and Theme providers
 ├── public/                 # Static assets
 ├── .gitignore              # Git ignore file
@@ -109,7 +91,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## 🔍 Form Validation
 
-Each step of the form includes validation rules defined using Zod schemas:
+Each step of the form includes validation rules defined using React Hook Form:
 
 ### Personal Information
 - **Full Name**: Required field
@@ -119,7 +101,7 @@ Each step of the form includes validation rules defined using Zod schemas:
 ### Address Details
 - **Street Address**: Required field
 - **City**: Required field
-- **Zip Code**: Required field, must be at least 5 digits
+- **Zip Code**: Required field, must be at least 5 digits and numeric
 
 ### Account Setup
 - **Username**: Required field, must be at least 4 characters
@@ -137,6 +119,7 @@ The application uses CSS variables to manage colors across light and dark modes:
   --background: #ffffff;
   --foreground: #171717;
   --card-bg: #ffffff;
+  --card-border: #e5e7eb;
   /* ... more variables ... */
 }
 
@@ -145,6 +128,7 @@ The application uses CSS variables to manage colors across light and dark modes:
   --background: #121212;
   --foreground: #f3f4f6;
   --card-bg: #1e1e1e;
+  --card-border: #2e2e2e;
   /* ... more variables ... */
 }
 ```
@@ -161,14 +145,33 @@ A button component that:
 - Shows a sun icon in dark mode and moon icon in light mode
 - Toggles between light and dark themes when clicked
 
-## 🧩 Adding New Form Steps
+## 🧩 Form State Management
 
-To add a new form step:
+The form state is managed using React Hook Form and React's useState:
 
-1. Create a new component in the `app/components/steps` directory
-2. Update the `steps` array in `MultiStepForm.jsx`
-3. Add corresponding validation schema in `FormSchema.js`
-4. Update the form's default values in `MultiStepForm.jsx`
+```javascript
+const [formData, setFormData] = useState({
+  fullName: '',
+  email: '',
+  phoneNumber: '',
+  streetAddress: '',
+  city: '',
+  zipCode: '',
+  username: '',
+  password: '',
+  confirmPassword: '',
+});
+
+const updateFormData = (data) => {
+  setFormData((prev) => ({ ...prev, ...data }));
+};
+```
+
+Each step component receives the current form data and an update function:
+
+```javascript
+<Step1 nextStep={nextStep} updateFormData={updateFormData} formData={formData} />
+```
 
 ## 🚀 Deployment
 
@@ -203,5 +206,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [Next.js](https://nextjs.org/) - The React Framework
 - [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework
 - [React Hook Form](https://react-hook-form.com/) - Performant, flexible and extensible forms
-- [Zod](https://github.com/colinhacks/zod) - TypeScript-first schema validation
 - [React Query](https://tanstack.com/query/latest) - Powerful asynchronous state management
+- [Geist Font](https://vercel.com/font) - Modern, minimal typeface from Vercel
